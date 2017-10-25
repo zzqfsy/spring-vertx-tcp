@@ -32,7 +32,6 @@ public class VertxTcpServerVerticle extends AbstractVerticle {
     //handle stream
     public void handle(NetSocket socket) {
         System.out.println("Incoming connection!");
-
         socket.handler(new Handler<Buffer>() {
 
             @Override

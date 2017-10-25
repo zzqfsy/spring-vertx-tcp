@@ -56,4 +56,9 @@ public class VertxTcpClientVerticle extends AbstractVerticle {
         socket.endHandler(v -> {
         });
     }
+
+    public static void main(String[] args) {
+        VertxTcpClientVerticle client = new VertxTcpClientVerticle();
+        Vertx.vertx().deployVerticle(client);
+    }
 }
