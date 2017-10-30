@@ -1,10 +1,9 @@
-package com.zzqfsy.vertxtcp.vertx.server;
+package com.zzqfsy.vertxtcp.server;
 
-import com.zzqfsy.vertxtcp.vertx.protocol.FrameParser;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.zzqfsy.vertxtcp.domain.PersonDomain;
+import com.zzqfsy.vertxtcp.protocol.FrameParser;
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Handler;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.NetServer;
 import io.vertx.core.net.NetServerOptions;
 import io.vertx.core.net.NetSocket;
@@ -40,7 +39,14 @@ public class VertxTcpServerVerticle extends AbstractVerticle {
                 System.out.println(res.cause());
                 return;
             }
-
+            Object object = res.result();
+            byte[] bytes = (byte[])object;
+            try {
+                PersonDomain.Person person = PersonDomain.Person.parseFrom(bytes);
+                System.out.println(person);
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
             System.out.println(res.result());
         }));
 

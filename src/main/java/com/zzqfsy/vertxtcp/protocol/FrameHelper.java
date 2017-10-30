@@ -13,7 +13,7 @@
  *
  *  You may elect to redistribute this code under either of these licenses.
  */
-package com.zzqfsy.vertxtcp.vertx.protocol;
+package com.zzqfsy.vertxtcp.protocol;
 
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.ReplyException;
@@ -32,7 +32,7 @@ public class FrameHelper {
 
   private FrameHelper() {}
 
-  public static void sendFrame(String type, String address, String replyAddress, JsonObject headers, Boolean send, JsonObject body, WriteStream<Buffer> handler) {
+  public static void sendFrame(String type, String address, String replyAddress, String headers, Boolean send, String body, WriteStream<Buffer> handler) {
     final JsonObject payload = new JsonObject().put("type", type);
 
     if (address != null) {
@@ -58,11 +58,11 @@ public class FrameHelper {
     writeFrame(payload, handler);
   }
 
-  public static void sendFrame(String type, String address, String replyAddress, JsonObject body, WriteStream<Buffer> handler) {
+  public static void sendFrame(String type, String address, String replyAddress, String body, WriteStream<Buffer> handler) {
     sendFrame(type, address, replyAddress, null, null, body, handler);
   }
 
-  public static void sendFrame(String type, String address, JsonObject body, WriteStream<Buffer> handler) {
+  public static void sendFrame(String type, String address, String body, WriteStream<Buffer> handler) {
     sendFrame(type, address, null, null, null, body, handler);
   }
 
@@ -94,6 +94,10 @@ public class FrameHelper {
     // encode
     byte[] data = payload.encode().getBytes(UTF8);
 
+    handler.write(Buffer.buffer().appendInt(data.length).appendBytes(data));
+  }
+
+  public static void writeFrame(byte[] data, WriteStream<Buffer> handler) {
     handler.write(Buffer.buffer().appendInt(data.length).appendBytes(data));
   }
 }

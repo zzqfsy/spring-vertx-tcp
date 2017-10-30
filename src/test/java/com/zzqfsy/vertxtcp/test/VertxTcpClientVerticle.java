@@ -1,7 +1,7 @@
 package com.zzqfsy.vertxtcp.test;
 
-import com.zzqfsy.vertxtcp.vertx.domain.Person;
-import com.zzqfsy.vertxtcp.vertx.protocol.FrameHelper;
+import com.zzqfsy.vertxtcp.domain.PersonDomain;
+import com.zzqfsy.vertxtcp.protocol.FrameHelper;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -35,14 +35,20 @@ public class VertxTcpClientVerticle extends AbstractVerticle {
             }
         });
 
-        Person person = new Person();
-        person.setColor("yellow");
-        person.setSex("male");
-        JsonObject jsonObject = JsonObject.mapFrom(person);
-        for (int i = 0; i < 500; i++){
-            jsonObject.put("" + i, i);
-        }
-        FrameHelper.writeFrame(jsonObject, socket);
+
+//        JsonObject jsonObject = new JsonObject();
+//        for (int i = 0; i < 500; i++){
+//            jsonObject.put("" + i, i);
+//        }
+//        FrameHelper.writeFrame(jsonObject, socket);
+
+
+        PersonDomain.Person.Builder builder = PersonDomain.Person.newBuilder();
+        builder.setId(1);
+        builder.setName("zzqfsy");
+        builder.setEmail("zzqfsy@gmail.com");
+        PersonDomain.Person person = builder.build();
+        FrameHelper.writeFrame(person.toByteArray(), socket);
 
         socket.exceptionHandler(t -> {
             System.out.println(t.getMessage());

@@ -13,7 +13,7 @@
  *
  *  You may elect to redistribute this code under either of these licenses.
  */
-package com.zzqfsy.vertxtcp.vertx.protocol;
+package com.zzqfsy.vertxtcp.protocol;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -32,9 +32,9 @@ public class FrameParser implements Handler<Buffer> {
   private Buffer _buffer;
   private int _offset;
 
-  private final Handler<AsyncResult<JsonObject>> client;
+  private final Handler<AsyncResult<Object>> client;
 
-  public FrameParser(Handler<AsyncResult<JsonObject>> client) {
+  public FrameParser(Handler<AsyncResult<Object>> client) {
     this.client = client;
   }
 
@@ -64,7 +64,7 @@ public class FrameParser implements Handler<Buffer> {
       if (remainingBytes - 4 >= length) {
         // we have a complete message
         try {
-          client.handle(Future.succeededFuture(new JsonObject(_buffer.getString(_offset, _offset + length))));
+          client.handle(Future.succeededFuture(_buffer.getBytes(_offset, _offset + length)));
         } catch (DecodeException e) {
           // bad json
           client.handle(Future.failedFuture(e));

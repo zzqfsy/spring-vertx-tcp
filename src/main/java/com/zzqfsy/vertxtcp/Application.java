@@ -1,6 +1,6 @@
-package com.zzqfsy.vertxtcp.vertx;
+package com.zzqfsy.vertxtcp;
 
-import com.zzqfsy.vertxtcp.vertx.server.VertxTcpServerVerticle;
+import com.zzqfsy.vertxtcp.server.VertxTcpServerVerticle;
 import io.vertx.core.Vertx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
