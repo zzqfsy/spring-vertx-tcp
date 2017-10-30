@@ -1,15 +1,16 @@
-package com.zzqfsy.vertxtcp.vertx.client;
+package com.zzqfsy.vertxtcp.test;
 
+import com.zzqfsy.vertxtcp.vertx.domain.Person;
+import com.zzqfsy.vertxtcp.vertx.protocol.FrameHelper;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.NetClient;
 import io.vertx.core.net.NetSocket;
-import org.springframework.stereotype.Component;
 
-//@Component
 public class VertxTcpClientVerticle extends AbstractVerticle {
 
     @Override
@@ -34,19 +35,14 @@ public class VertxTcpClientVerticle extends AbstractVerticle {
             }
         });
 
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i< 10000; i++){
-            sb.append(i);
+        Person person = new Person();
+        person.setColor("yellow");
+        person.setSex("male");
+        JsonObject jsonObject = JsonObject.mapFrom(person);
+        for (int i = 0; i < 500; i++){
+            jsonObject.put("" + i, i);
         }
-        //write data
-        String input = "GET / HTTP/1.1\\r\\nHost: jenkov.com\\r\\n\\r\\n";
-        System.out.println("write: " + input);
-        socket.write(input);
-
-        System.out.println("write: " + sb);
-        socket.write(sb.toString());
-
-
+        FrameHelper.writeFrame(jsonObject, socket);
 
         socket.exceptionHandler(t -> {
             System.out.println(t.getMessage());
